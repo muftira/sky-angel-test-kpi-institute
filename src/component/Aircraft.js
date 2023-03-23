@@ -73,9 +73,10 @@ export class Aircraft{
         document.body.innerHTML = `
     <center>
     <br/>
-    <h2>Game Over!</h2>
-    <p>Your star: ${this.star}</p>
-    <button class="btn btn-danger mt-2" onClick="location.reload()">Again</button>
+    <h2 class= "font-bold text-[30px] mb-6">Game Over!</h2>
+    <p class= "text-[20px] mb-6">Your star: ${this.star}</p>
+    <p class= "text-[20px] mb-6">Your time: 0 </p>
+    <button class="w-[100px] h-[40px] bg-red-500 rounded-md text-white shadow-xl shadow-black/[25%]" onClick="location.reload()">Start Game</button>
     </center>
     `
     }

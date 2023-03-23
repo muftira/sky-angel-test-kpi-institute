@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 // import './App.css';
-import bg from './image/background.jpg';
-import Aircraft from './component/Aircraft';
-import Bird from './component/Bird';
-import Cloud from './component/Cloud';
-import Parachute from './component/Parachute';
-import Star from './component/Star';
+import bg from '../image/background.jpg';
+import Aircraft from '../component/Aircraft';
+import Bird from '../component/Bird';
+import Cloud from '../component/Cloud';
+import Parachute from '../component/Parachute';
+import Star from '../component/Star';
 
-function App() {
+function Playground() {
   let canvas;
   let ctx;
   let maxBirdCount = 20;
@@ -22,20 +22,18 @@ function App() {
   
   const aircraft = new Aircraft(30,250)
   const randomNumber = (min,max) => Math.random() * max + min;
-  
+
   let birds = []
   let clouds = []
   let parachutes = []
   let stars = []
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
     canvas = document.getElementById("myCanvas");
 
-    
-
     setInterval(() => {    
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      
       ctx = canvas.getContext("2d");
       ctx.clearRect(0,0,1024,768);
 
@@ -83,12 +81,8 @@ function App() {
         star.draw(ctx)
       })
       
-
       aircraft.update();
       aircraft.draw(ctx);
-
-      
-      
 
     }, 1000 / 30);
   })
@@ -101,4 +95,4 @@ function App() {
   );
 }
 
-export default App;
+export default Playground;
