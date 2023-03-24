@@ -1,25 +1,83 @@
 import img from '../image/aircraft.png'
+import { useNavigate } from 'react-router-dom';
 export class Aircraft{
     dead = false;
     fuel = 10;
     star = 0;
     speed = 25;
+    navigate = useNavigate()
+    inputField = "";
+    
     
 
     constructor(posX,posY){
         this.posX = posX;
         this.posY = posY;
+        // this.navigate = useNavigate()
     }
 
     increaseFuel = () => {
         this.fuel += 10
     }
 
+    decreaseFuel = () => {
+        this.fuel -= 1
+    }
+
     increaseStar = () =>{
         this.star += 1
     }
 
-    update = (firecb) =>{
+    handleClick = () => {
+        
+        if(!this.inputField ===""){
+            this.navigate('/')
+            window.location.reload()
+        } 
+    }
+
+    handleOnChange = (e) => {
+        this.inputField = e.target.value
+        
+    }
+
+    
+
+    gameOver = (_star) => {
+
+
+        
+
+        // function handleOnChange(e, inputField){
+            
+            
+        // }
+
+        // function handleClick(inputField) {
+            
+            
+            
+        // }
+        
+        
+        document.body.innerHTML = `
+    <div class="flex flex-col justify-center items-center">
+    <br/>
+    <h2 class= "font-bold text-[30px] mb-6">Game Over!</h2>
+    <p class= "text-[20px] mb-6">Your star: ${_star}</p>
+    <p class= "text-[20px] mb-6">Your time: 0 </p>
+    <div class="flex flex-col justify-center items-center">
+    <p class= "text-[20px] mb-3 font-semibold">User Name</p>
+    <input id="myInput"  class="w-[180px] h-[30px] border-[2px] border-black rounded-md mb-6 p-2"/>
+    <button id="myButton" class="w-[100px] h-[40px] bg-red-500 rounded-md text-white shadow-xl shadow-black/[25%]">Continue</button>
+    </div>
+    </div>
+    `
+    document.getElementById("myButton").addEventListener("click", () => this.handleClick());
+    document.getElementById("myInput").addEventListener("input", (e) => this.handleOnChange(e));
+    }
+
+    update = () =>{
         document.onkeydown = (e) =>{
             if(e.keyCode === 39){
                 this.posX += this.speed
@@ -33,24 +91,29 @@ export class Aircraft{
             if(e.keyCode === 38){
                 this.posY -= this.speed
             }
-            
-        // document.addEventListener("keypress",(e) => {
-        //     if(e.keyCode === 32){
-        //         if(Date.now() - this.lastFireAt > 250){
-        //             firecb(this.posX + 32,this.posY);
-        //             this.lastFireAt = Date.now();
-        //         }
-        //     }
-        // })
         }
-        // if(this.posX < -10 || this.posX > 890){
-        //     this.dead = true
-        //     gameOver(this.score);
-        // }
-        // if (this.health <= 0) {
-        //     this.dead = true;
-        //     gameOver(this.score);
-        // }
+        
+        if(this.fuel <= 0){
+            this.dead = true
+            this.gameOver(this.star)
+        }
+
+        if(this.posX <= 0 ){
+            this.posX = 0
+        }
+
+        if(this.posX >= 930){
+            this.posX = 930
+        }
+
+        if(this.posY <= -15){
+            this.posY = -15
+        }
+
+        if(this.posY >= 690){
+            this.posY = 690
+        }
+        
     }
 
     draw = (ctx) => {
@@ -69,17 +132,7 @@ export class Aircraft{
         
     }
 
-    gameOver = () => {
-        document.body.innerHTML = `
-    <center>
-    <br/>
-    <h2 class= "font-bold text-[30px] mb-6">Game Over!</h2>
-    <p class= "text-[20px] mb-6">Your star: ${this.star}</p>
-    <p class= "text-[20px] mb-6">Your time: 0 </p>
-    <button class="w-[100px] h-[40px] bg-red-500 rounded-md text-white shadow-xl shadow-black/[25%]" onClick="location.reload()">Start Game</button>
-    </center>
-    `
-    }
+    
 }
 
 

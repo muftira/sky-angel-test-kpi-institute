@@ -12,7 +12,7 @@ export class Star {
         if(this.xPos > 1024){
             return true;
         }
-        if(this.yPos > 715){
+        if(this.yPos > 760){
             return true
         }
     }

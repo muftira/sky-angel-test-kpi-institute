@@ -3,7 +3,7 @@ export class Bird {
     speed = 4;
     dead = false;
 
-    constructor(xPos,yPos){
+    constructor(xPos, yPos){
         this.xPos = xPos;
         this.yPos = yPos;
     }
@@ -25,13 +25,12 @@ export class Bird {
         if(!this.dead && this.isDead()){
             this.dead = true;
         }
-
-        
-        
+ 
         if(!this.dead){
             if(Math.abs(aircraft.posX - this.xPos) < 65 && Math.abs(aircraft.posY - this.yPos) < 40){
                 this.dead = true;
-                aircraft.gameOver()
+                aircraft.dead = true
+                aircraft.gameOver(aircraft.star)
                 }
         } 
     }
