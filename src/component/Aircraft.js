@@ -2,6 +2,7 @@ import img from "../image/aircraft.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import song from '../audio/backgroundSong.mp3'
 export class Aircraft {
   dead = false;
   fuel = 10;
@@ -13,6 +14,10 @@ export class Aircraft {
   response = "";
   dataPlayer = {};
   listPLayers = {};
+  state = {
+    audio: new Audio(song),
+    isPlaying : false
+  }
 
   constructor(posX, posY) {
     this.posX = posX;
@@ -34,6 +39,16 @@ export class Aircraft {
   increaseTime = () => {
     this.time += 1;
   };
+  // for playing and pausing the sound
+  sound = () => {
+    if(this.state.isPlaying){
+      this.state.audio.pause()
+    }else{
+      this.state.audio.play()
+    }
+    this.state.isPlaying = !this.state.isPlaying
+    this.state.audio.loop = true
+  }
   // for storing the user data
   rankingPlayer = () => {
     this.listPLayers = JSON.parse(localStorage.getItem("user data"));
@@ -84,6 +99,7 @@ export class Aircraft {
   };
   // for feature gameover
   gameOver = () => {
+    this.sound()
     document.body.innerHTML = `
     <div class="flex flex-col justify-center items-center">
     <br/>
