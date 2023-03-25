@@ -80,7 +80,6 @@ function Playground() {
       setStartButton(true)
     }
     isPlay = !isPlay;
-    console.log("sound", aircraft.state.isPlaying);
   }
   // for making game paused
   function clearIntervalGame() {
