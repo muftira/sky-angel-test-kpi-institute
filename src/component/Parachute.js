@@ -7,7 +7,7 @@ export class Parachute {
     this.xPos = xPos;
     this.yPos = yPos;
   }
-
+  //for hiding parachutes after off the screen
   isHide = () => {
     if (this.xPos > 1024) {
       return true;
@@ -16,7 +16,7 @@ export class Parachute {
       return true;
     }
   };
-
+  // for updating or spawning parachutes content when game started
   update = (aircraft) => {
     if (this.hide) return;
     this.yPos += this.speed;
@@ -35,7 +35,7 @@ export class Parachute {
       }
     }
   };
-
+  // for drawing image cloud in canvas
   draw = (ctx) => {
     const image = new Image();
     image.src = img;

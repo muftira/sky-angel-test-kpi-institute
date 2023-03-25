@@ -18,23 +18,23 @@ export class Aircraft {
     this.posX = posX;
     this.posY = posY;
   }
-
+  // for increasing the fuel
   increaseFuel = () => {
     this.fuel += 10;
   };
-
+  // for decreasing the fuek
   decreaseFuel = () => {
     this.fuel -= 1;
   };
-
+  // for increasing the stars
   increaseStar = () => {
     this.star += 1;
   };
-
+  // for increasing the time
   increaseTime = () => {
     this.time += 1;
   };
-
+  // for storing the user data
   rankingPlayer = () => {
     this.listPLayers = JSON.parse(localStorage.getItem("user data"));
     if (!this.listPLayers) {
@@ -56,7 +56,7 @@ export class Aircraft {
     }
     localStorage.setItem("user data", JSON.stringify(this.listPLayers));
   };
-
+  // for clicking continue button and storing the user data
   handleClick = () => {
     if (this.inputField !== "") {
       axios
@@ -78,11 +78,11 @@ export class Aircraft {
         });
     }
   };
-
+  // for geting character from input field
   handleOnChange = (e) => {
     this.inputField = e.target.value;
   };
-
+  // for feature gameover
   gameOver = () => {
     document.body.innerHTML = `
     <div class="flex flex-col justify-center items-center">
@@ -104,7 +104,7 @@ export class Aircraft {
       .getElementById("myInput")
       .addEventListener("input", (e) => this.handleOnChange(e));
   };
-
+  // for updating aircraft content with action
   update = () => {
     document.onkeydown = (e) => {
       if (e.keyCode === 39) {
@@ -142,7 +142,7 @@ export class Aircraft {
       this.posY = 690;
     }
   };
-
+  // for drawing image aircraft and content in canvas
   draw = (ctx) => {
     const image = new Image();
     image.src = img;

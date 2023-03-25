@@ -37,6 +37,7 @@ function Playground() {
   let parachutes = [];
   let stars = [];
 
+  // for feature Ranking of players
   function Ranking() {
     let rankingSortStars =
       rankingPlayers && rankingPlayers.sort((a, b) => a.time - b.time);
@@ -67,20 +68,21 @@ function Playground() {
     return PlayerList;
   }
 
+  // for clicking start game button
   function handleStartGame(e) {
     e.preventDefault();
     startContent();
     StartTime();
     setStartButton(true);
   }
-
+  // for making game paused
   function clearIntervalGame() {
     clearInterval(intervalContent);
     clearInterval(intervalTime);
     intervalContent = null;
     intervalTime = null;
   }
-
+  // for starting a timer
   function StartTime() {
     if (!intervalTime) {
       intervalTime = setInterval(() => {
@@ -89,7 +91,7 @@ function Playground() {
       }, 1000);
     }
   }
-
+  // for starting content in game
   function startContent() {
     canvas = document.getElementById("myCanvas");
     if (!intervalContent) {
@@ -164,7 +166,7 @@ function Playground() {
       }, 1000 / 45);
     }
   }
-
+  // for pressing spacebar to pause or continue the game
   function handleKeyDown(e) {
     if (aircraft.dead) return;
     if (e.keyCode === 32) {
@@ -186,7 +188,7 @@ function Playground() {
   return (
     <div className="flex flex-col h-screen w-screen justify-center items-center ">
       {!startbutton ? (
-        <div className="absolute w-[1200px] h-[800px] border-2 border-neutral-400 bg-neutral-300 flex flex-col justify-center items-center rounded-2xl shadow-2xl shadow-black/[55%]">
+        <div className="absolute w-[600px] h-[500px] p-5 border-2 border-neutral-400 bg-neutral-300 flex flex-col justify-center items-center rounded-2xl shadow-2xl shadow-black/[55%]">
           <p className="text-center text-[20px] mb-6 text-red-500">
             Press Spacebar or Click Start Game Button to Play!
           </p>
@@ -198,7 +200,7 @@ function Playground() {
             Start Game
           </button>
           <p className="font-bold text-[30px] mt-6">Player's Ranking</p>
-          <div>
+          <div className="overflow-y-auto">
             {Ranking() &&
               Ranking().length > 0 &&
               Ranking().map((ranking) => (
@@ -225,7 +227,7 @@ function Playground() {
       )}
       <div className="flex w-[1024px] justify-center">
         <p className="text-center text-[20px] mb-2 text-red-500">
-          Press Spacebar to pause the Game
+          Press Spacebar to pause or continue the Game
         </p>
       </div>
       <canvas

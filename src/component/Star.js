@@ -7,7 +7,7 @@ export class Star {
     this.xPos = xPos;
     this.yPos = yPos;
   }
-
+  //for hiding star after off the screen
   isHide = () => {
     if (this.xPos > 1024) {
       return true;
@@ -16,7 +16,7 @@ export class Star {
       return true;
     }
   };
-
+  // for updating or spawning stars content when game started
   update = (aircraft) => {
     if (this.hide) return;
     this.yPos += this.speed;
@@ -35,7 +35,7 @@ export class Star {
       }
     }
   };
-
+  // for drawing image star in canvas
   draw = (ctx) => {
     const image = new Image();
     image.src = img;

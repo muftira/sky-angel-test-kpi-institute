@@ -7,7 +7,7 @@ export class Cloud {
     this.xPos = xPos;
     this.yPos = yPos;
   }
-
+  //for hiding clouds after off the screen
   isHide = () => {
     if (this.yPos > 768) {
       return true;
@@ -16,7 +16,7 @@ export class Cloud {
       return true;
     }
   };
-
+  // for updating or spawning clouds content when game started
   update = () => {
     if (this.hide) return;
     this.xPos -= this.speed;
@@ -25,7 +25,7 @@ export class Cloud {
       this.hide = true;
     }
   };
-
+  // for drawing image cloud in canvas
   draw = (ctx) => {
     const image = new Image();
     image.src = img;

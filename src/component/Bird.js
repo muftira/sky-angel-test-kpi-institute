@@ -7,7 +7,7 @@ export class Bird {
     this.xPos = xPos;
     this.yPos = yPos;
   }
-
+  // for hiding bird after off the screen
   isDead = () => {
     if (this.yPos > 768) {
       return true;
@@ -16,7 +16,7 @@ export class Bird {
       return true;
     }
   };
-
+  // for updating or spawning bird content when game started
   update = (aircraft) => {
     if (this.dead) return;
     this.xPos -= this.speed;
@@ -36,7 +36,7 @@ export class Bird {
       }
     }
   };
-
+  // for drawing image bird in canvas
   draw = (ctx) => {
     const image = new Image();
     image.src = img;
