@@ -71,10 +71,15 @@ function Playground() {
   // for clicking start game button
   function handleStartGame(e) {
     e.preventDefault();
-    aircraft.state.audio.play()
-    startContent();
-    StartTime();
-    setStartButton(true);
+    if (isPlay) {
+      clearIntervalGame();
+    } else {
+      aircraft.state.audio.play()
+      startContent();
+      StartTime();
+      setStartButton(true)
+    }
+    isPlay = !isPlay;
     console.log("sound", aircraft.state.isPlaying);
   }
   // for making game paused
@@ -173,7 +178,6 @@ function Playground() {
   function handleKeyDown(e) {
     if (aircraft.dead) return;
     if (e.keyCode === 32) {
-      
       if (isPlay) {
         clearIntervalGame();
       } else {
