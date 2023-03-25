@@ -1,235 +1,244 @@
-import React, { useEffect, useState } from 'react';
-// import './App.css';
-import bg from '../image/background.jpg';
-import Aircraft from '../component/Aircraft';
-import Bird from '../component/Bird';
-import Cloud from '../component/Cloud';
-import Parachute from '../component/Parachute';
-import Star from '../component/Star';
+import React, { useEffect, useState } from "react";
+import bg from "../image/background.jpg";
+import Aircraft from "../component/Aircraft";
+import Bird from "../component/Bird";
+import Cloud from "../component/Cloud";
+import Parachute from "../component/Parachute";
+import Star from "../component/Star";
 
 function Playground() {
-  // const [time, setTime] = useState(0)
-  const [timerOn, setTimerOn] = useState(true)
+  const [startbutton, setStartButton] = useState(false);
+
+  let rankingPlayers = JSON.parse(localStorage.getItem("user data"));
 
   let intervalContent = null;
-  let isStart = false;
+  let intervalTime = null;
+  let isPlay = false;
+
   let canvas;
   let ctx;
+
   let maxBirdCount = 20;
-  let maxCloudCount = 20
-  let maxParachuteCount = 10
-  let maxStarCount = 10
+  let maxCloudCount = 20;
+  let maxParachuteCount = 10;
+  let maxStarCount = 10;
 
   let lastBirdSpawnAt = Date.now();
-  let lastCloudSpawnAt = Date.now()
-  let lastParachuteSpawnAt = Date.now()
-  let lastStarSpawnAt = Date.now()
-  
-  const aircraft = new Aircraft(30,250)
-  // const bird = new Bird()
-  const randomNumber = (min,max) => Math.random() * max + min;
+  let lastCloudSpawnAt = Date.now();
+  let lastParachuteSpawnAt = Date.now();
+  let lastStarSpawnAt = Date.now();
 
-  let birds = []
-  let clouds = []
-  let parachutes = []
-  let stars = []
+  const aircraft = new Aircraft(30, 250);
 
-  
-    const handleClick = (e) => {
-        e.preventDefault()
-        return setTimerOn(!timerOn)
+  const randomNumber = (min, max) => Math.random() * max + min;
+
+  let birds = [];
+  let clouds = [];
+  let parachutes = [];
+  let stars = [];
+
+  function Ranking() {
+    let rankingSortStars =
+      rankingPlayers && rankingPlayers.sort((a, b) => a.time - b.time);
+    let reverseRankingSortStar = rankingSortStars && rankingSortStars.reverse();
+    let rankingSortTime =
+      reverseRankingSortStar &&
+      reverseRankingSortStar.sort((a, b) => a.stars - b.stars);
+    let _rangkingPlayers = rankingSortTime && rankingSortTime.reverse();
+
+    let currentCount = -1;
+    let currentRank = 0;
+    let gap = 1;
+
+    let PlayerList =
+      _rangkingPlayers &&
+      _rangkingPlayers.map((player) => {
+        let result = { ...player };
+        if (currentCount !== result.stars + result.time) {
+          currentRank += gap;
+          gap = 1;
+        }
+
+        result.rank = currentRank;
+        currentCount = result.stars + result.time;
+
+        return result;
+      });
+    return PlayerList;
+  }
+
+  function handleStartGame(e) {
+    e.preventDefault();
+    startContent();
+    StartTime();
+    setStartButton(true);
+  }
+
+  function clearIntervalGame() {
+    clearInterval(intervalContent);
+    clearInterval(intervalTime);
+    intervalContent = null;
+    intervalTime = null;
+  }
+
+  function StartTime() {
+    if (!intervalTime) {
+      intervalTime = setInterval(() => {
+        aircraft.decreaseFuel();
+        aircraft.increaseTime();
+      }, 1000);
     }
+  }
 
-    // window.onkeydown = (e) =>{
-    //     if(e.keyCode === 32) {
-    //         return setTimerOn(!timerOn)    
-    //     }
-    //   }
-
-  setInterval(() => {
-    aircraft.decreaseFuel()
-}, 1000)
-
-function clearIntervalGame() {
-  clearInterval(intervalContent);
-  intervalContent = null;
-}
-
-function startGame(){
+  function startContent() {
     canvas = document.getElementById("myCanvas");
-    if(!intervalContent){
+    if (!intervalContent) {
       intervalContent = setInterval(() => {
         ctx = canvas.getContext("2d");
-        ctx.clearRect(0,0,1024,768);
+        ctx.clearRect(0, 0, 1024, 768);
 
-        const random = randomNumber(0,700);
+        const random = randomNumber(0, 700);
 
-        if(clouds.length < maxCloudCount && (Date.now() - lastCloudSpawnAt) > 2000){
-          clouds.push( new Cloud(1100, random));
+        if (
+          clouds.length < maxCloudCount &&
+          Date.now() - lastCloudSpawnAt > 2000
+        ) {
+          clouds.push(new Cloud(1100, random));
           lastCloudSpawnAt = Date.now();
         }
 
-        clouds = clouds.filter(cloud => !cloud.hide)
-        clouds.forEach(cloud => {
+        clouds = clouds.filter((cloud) => !cloud.hide);
+        clouds.forEach((cloud) => {
           cloud.update();
-           cloud.draw(ctx)
-        })
-                    
-        if(birds.length < maxBirdCount && (Date.now() - lastBirdSpawnAt) > 1500){
+          cloud.draw(ctx);
+        });
+
+        if (
+          birds.length < maxBirdCount &&
+          Date.now() - lastBirdSpawnAt > 1500
+        ) {
           birds.push(new Bird(1100, random));
           lastBirdSpawnAt = Date.now();
         }
-              
+
         birds = birds.filter((player) => !player.dead);
-        birds.forEach(bird => {
+        birds.forEach((bird) => {
           bird.update(aircraft);
           bird.draw(ctx);
         });
-              
-        if(parachutes.length < maxParachuteCount && (Date.now() - lastParachuteSpawnAt) > 3500){
+
+        if (
+          parachutes.length < maxParachuteCount &&
+          Date.now() - lastParachuteSpawnAt > 3500
+        ) {
           parachutes.push(new Parachute(random, -200));
           lastParachuteSpawnAt = Date.now();
         }
 
-        parachutes = parachutes.filter(parachute => !parachute.hide)
-        parachutes.forEach(parachute => {
-          parachute.update(aircraft)
-          parachute.draw(ctx)
-        })
-              
-        if(stars.length < maxStarCount && (Date.now() - lastStarSpawnAt) > 3000){
+        parachutes = parachutes.filter((parachute) => !parachute.hide);
+        parachutes.forEach((parachute) => {
+          parachute.update(aircraft);
+          parachute.draw(ctx);
+        });
+
+        if (
+          stars.length < maxStarCount &&
+          Date.now() - lastStarSpawnAt > 3000
+        ) {
           stars.push(new Star(random, random * -1));
-          lastStarSpawnAt = Date.now()
+          lastStarSpawnAt = Date.now();
         }
-              
-        stars = stars.filter(star => !star.hide)
-          stars.forEach(star => {
-            star.update(aircraft)
-            star.draw(ctx)
-        })
-                    
+
+        stars = stars.filter((star) => !star.hide);
+        stars.forEach((star) => {
+          star.update(aircraft);
+          star.draw(ctx);
+        });
+
         aircraft.update();
         aircraft.draw(ctx);
-        
-        if(aircraft.dead){
+
+        if (aircraft.dead) {
           clearIntervalGame();
         }
-
-      }, 1000 / 30)
+      }, 1000 / 45);
     }
-}
-
-function handleKeyDown(e){
-  if(e.keyCode === 32){
-    if(aircraft.dead) return;
-    if(isStart){
-      clearIntervalGame()
-    }else{
-      startGame()
-    }
-    isStart = !isStart
   }
-}
 
-useEffect(() => {
-  window.addEventListener('keydown', handleKeyDown);
+  function handleKeyDown(e) {
+    if (aircraft.dead) return;
+    if (e.keyCode === 32) {
+      if (isPlay) {
+        clearIntervalGame();
+      } else {
+        startContent();
+        StartTime();
+      }
+      isPlay = !isPlay;
+      setStartButton(true);
+    }
+  }
 
-  // return () => {
-  //   window.removeEventListener('keydown', handleKeyDown);
-  //   // document.exitFullscreen();
-  // };
-}, []);
-
-
-
-
-
-  // useEffect(() => {
-    
-  //   canvas = document.getElementById("myCanvas");
-  //   let intervalContent = null;
-  //   let intervalTimer = null;
-
-  //   // if(timerOn){
-        
-  //   // }else{
-  //   //     clearInterval(intervalTimer)
-  //   // }
-
-  //   if(timerOn){
-  //       intervalContent = setInterval(() => {    
-            
-  //           ctx = canvas.getContext("2d");
-  //           ctx.clearRect(0,0,1024,768);
-      
-  //           const random = randomNumber(0,700);
-      
-  //           if(clouds.length < maxCloudCount && (Date.now() - lastCloudSpawnAt) > 2000){
-  //             clouds.push( new Cloud(1100, random));
-  //             lastCloudSpawnAt = Date.now();
-  //           }
-  //           clouds = clouds.filter(cloud => !cloud.hide)
-  //           clouds.forEach(cloud => {
-  //             cloud.update();
-  //             cloud.draw(ctx)
-  //           })
-            
-  //           if(birds.length < maxBirdCount && (Date.now() - lastBirdSpawnAt) > 1500){
-  //             birds.push(new Bird(1100, random));
-  //             lastBirdSpawnAt = Date.now();
-  //           }
-      
-  //           birds = birds.filter((player) => !player.dead);
-  //           birds.forEach(bird => {
-  //             bird.update(aircraft);
-  //             bird.draw(ctx);
-  //           });
-      
-  //           if(parachutes.length < maxParachuteCount && (Date.now() - lastParachuteSpawnAt) > 3500){
-  //             parachutes.push(new Parachute(random, -200));
-  //             lastParachuteSpawnAt = Date.now();
-  //           }
-  //           parachutes = parachutes.filter(parachute => !parachute.hide)
-  //           parachutes.forEach(parachute => {
-  //             parachute.update(aircraft)
-  //             parachute.draw(ctx)
-  //           })
-      
-  //           if(stars.length < maxStarCount && (Date.now() - lastStarSpawnAt) > 3000){
-  //             stars.push(new Star(random, random * -1));
-  //             lastStarSpawnAt = Date.now()
-  //           }
-      
-  //           stars = stars.filter(star => !star.hide)
-  //           stars.forEach(star => {
-  //             star.update(aircraft)
-  //             star.draw(ctx)
-  //           })
-            
-  //           aircraft.update();
-  //           aircraft.draw(ctx);
-
-  //           if(aircraft.dead){
-  //               setTimerOn(false)
-  //           }
-      
-  //         }, 1000 / 35);
-  //   }else{
-  //       clearInterval(intervalContent)
-  //   }
-
-  //   return () => clearInterval(intervalContent)
-    
-  // }, [timerOn])
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
-    <div className='flex flex-col h-screen w-screen justify-center items-center'>
-        <div className='flex w-[1024px] justify-center mb-5'>
-        <button onClick={(e) => handleClick(e)} className='self-start font-bold w-[100px] h-[40px] bg-red-500 rounded-md text-white shadow-xl shadow-black/[25%]'>Pause Game</button>
+    <div className="flex flex-col h-screen w-screen justify-center items-center ">
+      {!startbutton ? (
+        <div className="absolute w-[1200px] h-[800px] border-2 border-neutral-400 bg-neutral-300 flex flex-col justify-center items-center rounded-2xl shadow-2xl shadow-black/[55%]">
+          <p className="text-center text-[20px] mb-6 text-red-500">
+            Press Spacebar or Click Start Game Button to Play!
+          </p>
+          <p className="font-bold text-[50px] mb-6">Sky Angel Game</p>
+          <button
+            className="w-[100px] h-[40px] bg-sky-500 rounded-md text-white font-bold shadow-xl shadow-black/[25%]"
+            onClick={(e) => handleStartGame(e)}
+          >
+            Start Game
+          </button>
+          <p className="font-bold text-[30px] mt-6">Player's Ranking</p>
+          <div>
+            {Ranking() &&
+              Ranking().length > 0 &&
+              Ranking().map((ranking) => (
+                <div
+                  key={ranking.id}
+                  className="flex text-center text-[20px] mt-3"
+                >
+                  <div className="bg-[#FFD641] p-1 border-2 border-black rounded-md">
+                    <p className="text-center font-bold">
+                      No: {ranking.rank} &nbsp;
+                    </p>
+                  </div>
+                  <div className="flex items-center">
+                    <p>&nbsp; User: {ranking.name} &nbsp;</p>
+                    <p>Time: {ranking.time} &nbsp;</p>
+                    <p>Stars: {ranking.stars}</p>
+                  </div>
+                </div>
+              ))}
+          </div>
         </div>
-        
-        <canvas id="myCanvas" width="1024" height="768" style={{backgroundImage: `url(${bg})`,backgroundSize:"cover" ,border:'2px solid #000000'}}/>
+      ) : (
+        ""
+      )}
+      <div className="flex w-[1024px] justify-center">
+        <p className="text-center text-[20px] mb-2 text-red-500">
+          Press Spacebar to pause the Game
+        </p>
       </div>
+      <canvas
+        id="myCanvas"
+        width="1024"
+        height="768"
+        style={{
+          backgroundImage: `url(${bg})`,
+          backgroundSize: "cover",
+          border: "2px solid #000000",
+        }}
+      />
+    </div>
   );
 }
 

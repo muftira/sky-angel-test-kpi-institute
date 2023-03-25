@@ -5,19 +5,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import './index.css';
-import Home from './pages/Home';
 import reportWebVitals from './reportWebVitals';
 import Playground from './pages/Playground';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: <Playground />,
   },
-  {
-    path: '/playground',
-    element: <Playground/>
-  }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
